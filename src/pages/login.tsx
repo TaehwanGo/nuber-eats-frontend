@@ -1,4 +1,4 @@
-import { ApolloError, gql, useMutation } from '@apollo/client';
+import { gql, useMutation } from '@apollo/client';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { FormError } from '../components/form-error';
@@ -36,22 +36,25 @@ export const Login = () => {
       console.log(error);
     }
   };
-  const [loginMutation, { data: loginMutationResult }] = useMutation<
+  // useMutation의 결과 array의 0번째, 함수(loginMutation)는 반드시 호출해줘야 함
+  const [loginMutation, { data: loginMutationResult, loading }] = useMutation<
     loginMutation,
     loginMutationVariables
   >(LOGIN_MUTATION, {
     onCompleted,
   }); // useMutation으로 받는 첫번째 arg는 mutation function 이고 trigger 역할을 함
   const onSubmit = () => {
-    const { email, password } = getValues();
-    loginMutation({
-      variables: {
-        loginInput: {
-          email,
-          password,
+    if (!loading) {
+      const { email, password } = getValues();
+      loginMutation({
+        variables: {
+          loginInput: {
+            email,
+            password,
+          },
         },
-      },
-    });
+      });
+    }
   };
   const emailRegex = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
   return (
@@ -92,7 +95,9 @@ export const Login = () => {
           {errors.password?.type === 'minLength' && (
             <FormError errorMessage="Password must be more than 8 chars." />
           )}
-          <button className="mt-3 btn">Log in</button>
+          <button className="mt-3 btn">
+            {loading ? 'Loading...' : 'Log in'}
+          </button>
           {loginMutationResult?.login.error && (
             <FormError errorMessage={loginMutationResult.login.error} />
           )}
