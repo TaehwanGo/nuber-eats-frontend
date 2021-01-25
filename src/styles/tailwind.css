@@ -1,0 +1,7 @@
+/* ./your-css-folder/styles.css */
+/* post css가 아래 3줄을 Tailwind가 갖고 있는 모든 클래스 이름으로 바꿈 
++ tailwind config file을 들여다 보고 새 클래스 이름이 있다면 그것도 추가 */
+@tailwind base;
+@tailwind components;
+
+@tailwind utilities;
