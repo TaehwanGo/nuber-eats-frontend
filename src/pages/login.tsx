@@ -1,4 +1,4 @@
-import { gql, useMutation } from '@apollo/client';
+import { ApolloError, gql, useMutation } from '@apollo/client';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { FormError } from '../components/form-error';
@@ -25,20 +25,33 @@ interface ILoginForm {
 }
 
 export const Login = () => {
-  const { register, watch, errors, handleSubmit } = useForm<ILoginForm>();
-  const [loginMutation] = useMutation<loginMutation, loginMutationVariables>(
-    LOGIN_MUTATION,
-    {
+  const { register, getValues, errors, handleSubmit } = useForm<ILoginForm>();
+  const onCompleted = (data: loginMutation) => {
+    const {
+      login: { error, ok, token },
+    } = data;
+    if (ok) {
+      console.log(token);
+    } else {
+      console.log(error);
+    }
+  };
+  const [loginMutation, { data: loginMutationResult }] = useMutation<
+    loginMutation,
+    loginMutationVariables
+  >(LOGIN_MUTATION, {
+    onCompleted,
+  }); // useMutation으로 받는 첫번째 arg는 mutation function 이고 trigger 역할을 함
+  const onSubmit = () => {
+    const { email, password } = getValues();
+    loginMutation({
       variables: {
         loginInput: {
-          email: watch('email'),
-          password: watch('password'),
+          email,
+          password,
         },
       },
-    },
-  ); // useMutation으로 받는 첫번째 arg는 mutation function 이고 trigger 역할을 함
-  const onSubmit = () => {
-    loginMutation();
+    });
   };
   const emailRegex = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
   return (
@@ -80,6 +93,9 @@ export const Login = () => {
             <FormError errorMessage="Password must be more than 8 chars." />
           )}
           <button className="mt-3 btn">Log in</button>
+          {loginMutationResult?.login.error && (
+            <FormError errorMessage={loginMutationResult.login.error} />
+          )}
         </form>
       </div>
     </div>
