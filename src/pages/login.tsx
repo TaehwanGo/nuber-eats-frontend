@@ -10,8 +10,8 @@ import {
 // 아래 mutation이름 (PotatoMutation)은 백엔드로 가는게 아니라 프론트에서 쓰여질 것임(Apollo)
 // Apollo는 이 변수들을 살펴보고 내가 작성한 변수들을 가지고 mutation을 만들음
 const LOGIN_MUTATION = gql`
-  mutation loginMutation($email: String!, $password: String!) {
-    login(input: { email: $email, password: $password }) {
+  mutation loginMutation($loginInput: LoginInput!) {
+    login(input: $loginInput) {
       ok
       token
       error
@@ -25,18 +25,20 @@ interface ILoginForm {
 }
 
 export const Login = () => {
-  const { register, getValues, errors, handleSubmit } = useForm<ILoginForm>();
+  const { register, watch, errors, handleSubmit } = useForm<ILoginForm>();
   const [loginMutation] = useMutation<loginMutation, loginMutationVariables>(
     LOGIN_MUTATION,
+    {
+      variables: {
+        loginInput: {
+          email: watch('email'),
+          password: watch('password'),
+        },
+      },
+    },
   ); // useMutation으로 받는 첫번째 arg는 mutation function 이고 trigger 역할을 함
   const onSubmit = () => {
-    const { email, password } = getValues();
-    loginMutation({
-      variables: {
-        email,
-        password,
-      },
-    });
+    loginMutation();
   };
   const emailRegex = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
   return (
