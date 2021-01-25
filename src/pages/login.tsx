@@ -2,11 +2,15 @@ import { gql, useMutation } from '@apollo/client';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { FormError } from '../components/form-error';
+import {
+  loginMutation,
+  loginMutationVariables,
+} from '../__generated__/loginMutation';
 
 // 아래 mutation이름 (PotatoMutation)은 백엔드로 가는게 아니라 프론트에서 쓰여질 것임(Apollo)
 // Apollo는 이 변수들을 살펴보고 내가 작성한 변수들을 가지고 mutation을 만들음
 const LOGIN_MUTATION = gql`
-  mutation PotatoMutation($email: String!, $password: String!) {
+  mutation loginMutation($email: String!, $password: String!) {
     login(input: { email: $email, password: $password }) {
       ok
       token
@@ -22,7 +26,9 @@ interface ILoginForm {
 
 export const Login = () => {
   const { register, getValues, errors, handleSubmit } = useForm<ILoginForm>();
-  const [loginMutation] = useMutation(LOGIN_MUTATION); // useMutation으로 받는 첫번째 arg는 mutation function 이고 trigger 역할을 함
+  const [loginMutation] = useMutation<loginMutation, loginMutationVariables>(
+    LOGIN_MUTATION,
+  ); // useMutation으로 받는 첫번째 arg는 mutation function 이고 trigger 역할을 함
   const onSubmit = () => {
     const { email, password } = getValues();
     loginMutation({
