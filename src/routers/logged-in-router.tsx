@@ -10,6 +10,7 @@ import { isLoggedInVar } from '../apollo';
 import { NotFound } from '../pages/404';
 import { Restaurants } from '../pages/client/restaurant';
 import { meQuery } from '../__generated__/meQuery';
+import { Header } from '../components/header';
 
 //<></> : fragment : parent없이 많은 element를 동시에 return 할 수 있게 됨
 const ClientRoutes = [
@@ -42,6 +43,7 @@ export const LoggedInRouter = () => {
   }
   return (
     <Router>
+      <Header />
       <Switch>
         {data.me.role === 'Client' && ClientRoutes}
         <Redirect to="/" />
