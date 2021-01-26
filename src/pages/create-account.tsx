@@ -5,8 +5,12 @@ import { useForm } from 'react-hook-form';
 import { FormError } from '../components/form-error';
 import nuberLogo from '../images/logo.svg'; // svg는 import 가능
 import { Button } from '../components/button';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { UserRole } from '../__generated__/globalTypes';
+import {
+  createAccountMutation,
+  createAccountMutationVariables,
+} from '../__generated__/createAccountMutation';
 
 // 아래 mutation이름 (PotatoMutation)은 백엔드로 가는게 아니라 프론트에서 쓰여질 것임(Apollo)
 // Apollo는 이 변수들을 살펴보고 내가 작성한 변수들을 가지고 mutation을 만들음
@@ -39,33 +43,40 @@ export const CreateAccount = () => {
       role: UserRole.Client,
     },
   }); // useForm + useMutation => awesome !
-  // const onCompleted = data => {
-  //   const {
-  //     login: { error, ok },
-  //   } = data;
-  //   if (ok) {
-  //     console.log(ok);
-  //   } else {
-  //     console.log(error);
-  //   }
-  // };
+  const history = useHistory();
+  const onCompleted = (data: createAccountMutation) => {
+    const {
+      createAccount: { ok },
+    } = data;
+    if (ok) {
+      // redirect to login page : useHistory
+      history.push('/login');
+    }
+  };
   // useMutation의 결과 array의 0번째, 함수(loginMutation)는 반드시 호출해줘야 함 : 그래야 backend로 mutation이 전달됨
-  const [createAccountMutation] = useMutation(CREATE_ACCOUNT_MUTATION); // useMutation으로 받는 첫번째 arg는 mutation function 이고 trigger 역할을 함
+  const [
+    createAccountMutation,
+    { loading, data: createAccountMutationResult },
+  ] = useMutation<createAccountMutation, createAccountMutationVariables>(
+    CREATE_ACCOUNT_MUTATION,
+    { onCompleted },
+  ); // useMutation으로 받는 첫번째 arg는 mutation function 이고 trigger 역할을 함
   const onSubmit = () => {
-    // if (!loading) {
-    //   const { email, password } = getValues();
-    //   createAccountMutation({
-    //     variables: {
-    //       loginInput: {
-    //         email,
-    //         password,
-    //       },
-    //     },
-    //   });
-    // }
+    if (!loading) {
+      const { email, password, role } = getValues();
+      createAccountMutation({
+        variables: {
+          createAccount: {
+            email,
+            password,
+            role,
+          },
+        },
+      });
+    }
   };
   console.log(watch());
-  const emailRegex = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+  const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return (
     <div className="h-screen flex items-center flex-col mt-10 lg:mt-28">
       <Helmet>
@@ -85,7 +96,7 @@ export const CreateAccount = () => {
               required: 'Email is required',
               pattern: {
                 value: emailRegex,
-                message: 'Email must be type of email',
+                message: 'Please enter a valid email',
               },
             })}
             required
@@ -123,12 +134,14 @@ export const CreateAccount = () => {
           </select>
           <Button
             canClick={formState.isValid}
-            loading={false}
+            loading={loading}
             actionText="Create Account"
           />
-          {/* {loginMutationResult?.login.error && (
-            <FormError errorMessage={loginMutationResult.login.error} />
-          )} */}
+          {createAccountMutationResult?.createAccount.error && (
+            <FormError
+              errorMessage={createAccountMutationResult.createAccount.error}
+            />
+          )}
         </form>
         <div>
           Already have an account?{' '}
