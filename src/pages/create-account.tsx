@@ -1,6 +1,6 @@
 import { gql, useMutation } from '@apollo/client';
 import React from 'react';
-import Helmet from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import { useForm } from 'react-hook-form';
 import { FormError } from '../components/form-error';
 import nuberLogo from '../images/logo.svg'; // svg는 import 가능
@@ -50,6 +50,7 @@ export const CreateAccount = () => {
     } = data;
     if (ok) {
       // redirect to login page : useHistory
+      alert('Account Created! Log in now!');
       history.push('/login');
     }
   };
