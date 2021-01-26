@@ -1,4 +1,3 @@
-import { gql, useQuery } from '@apollo/client';
 import React from 'react';
 import {
   BrowserRouter as Router,
@@ -6,11 +5,9 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
-import { isLoggedInVar } from '../apollo';
-import { NotFound } from '../pages/404';
 import { Restaurants } from '../pages/client/restaurant';
-import { meQuery } from '../__generated__/meQuery';
 import { Header } from '../components/header';
+import { useMe } from '../hooks/useMe';
 
 //<></> : fragment : parent없이 많은 element를 동시에 return 할 수 있게 됨
 const ClientRoutes = [
@@ -19,19 +16,8 @@ const ClientRoutes = [
   </Route>,
 ];
 
-const ME_QUERY = gql`
-  query meQuery {
-    me {
-      id
-      email
-      role
-      verified
-    }
-  }
-`;
-
 export const LoggedInRouter = () => {
-  const { data, loading, error } = useQuery<meQuery>(ME_QUERY);
+  const { data, loading, error } = useMe();
   // console.log(error);
   // console.log(data?.me.role);
   if (!data || loading || error) {
@@ -43,7 +29,7 @@ export const LoggedInRouter = () => {
   }
   return (
     <Router>
-      <Header email={data.me.email} />
+      <Header />
       <Switch>
         {data.me.role === 'Client' && ClientRoutes}
         <Redirect to="/" />
