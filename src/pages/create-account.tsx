@@ -51,7 +51,7 @@ export const CreateAccount = () => {
     if (ok) {
       // redirect to login page : useHistory
       alert('Account Created! Log in now!');
-      history.push('/login');
+      history.push('/');
     }
   };
   // useMutation의 결과 array의 0번째, 함수(loginMutation)는 반드시 호출해줘야 함 : 그래야 backend로 mutation이 전달됨
@@ -146,7 +146,7 @@ export const CreateAccount = () => {
         </form>
         <div>
           Already have an account?{' '}
-          <Link to="/login" className="text-lime-600 hover:underline">
+          <Link to="/" className="text-lime-600 hover:underline">
             Log in now
           </Link>
         </div>
