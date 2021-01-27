@@ -25,18 +25,18 @@ export const ConfirmEmail = () => {
       verifyEmail: { ok },
     } = data;
     if (ok && userData?.me.id) {
-      // client.writeFragment({
-      //   id: `User:${userData.me.id}`,
-      //   fragment: gql`
-      //     fragment VerifiedUser on User {
-      //       verified
-      //     }
-      //   `,
-      //   data: {
-      //     verified: true,
-      //   },
-      // });
-      await refetch();
+      client.writeFragment({
+        id: `User:${userData.me.id}`,
+        fragment: gql`
+          fragment VerifiedUser on User {
+            verified
+          }
+        `,
+        data: {
+          verified: true,
+        },
+      });
+      // await refetch();
       history.push('/');
     }
   };

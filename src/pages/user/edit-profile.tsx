@@ -37,27 +37,27 @@ export const EditProfile = () => {
       editProfile: { ok },
     } = data;
     if (ok && userData) {
-      // update cache
-      //   const {
-      //     me: { email: prevEmail, id },
-      //   } = userData;
-      //   const { email: newEmail } = getValues();
-      //   if (prevEmail !== newEmail) {
-      //     client.writeFragment({
-      //       id: `User:${id}`,
-      //       fragment: gql`
-      //         fragment EditedUser on User {
-      //           verified
-      //           email
-      //         }
-      //       `,
-      //       data: {
-      //         email: newEmail,
-      //         verified: false,
-      //       },
-      //     });
-      //   }
-      await refetch();
+      //update cache
+      const {
+        me: { email: prevEmail, id },
+      } = userData;
+      const { email: newEmail } = getValues();
+      if (prevEmail !== newEmail) {
+        client.writeFragment({
+          id: `User:${id}`,
+          fragment: gql`
+            fragment EditedUser on User {
+              verified
+              email
+            }
+          `,
+          data: {
+            email: newEmail,
+            verified: false,
+          },
+        });
+      }
+      //   await refetch();
     }
   };
   const [editProfile, { loading }] = useMutation<
