@@ -24,7 +24,7 @@ const EDIT_PROFILE_MUTATION = gql`
 `;
 
 export const EditProfile = () => {
-  const { data: userData } = useMe();
+  const { data: userData, refetch } = useMe();
   const { register, handleSubmit, getValues, formState } = useForm<IFormProps>({
     defaultValues: {
       email: userData?.me.email,
@@ -32,31 +32,32 @@ export const EditProfile = () => {
     mode: 'onChange',
   });
   const client = useApolloClient();
-  const onCompleted = (data: editProfile) => {
+  const onCompleted = async (data: editProfile) => {
     const {
       editProfile: { ok },
     } = data;
     if (ok && userData) {
       // update cache
-      const {
-        me: { email: prevEmail, id },
-      } = userData;
-      const { email: newEmail } = getValues();
-      if (prevEmail !== newEmail) {
-        client.writeFragment({
-          id: `User:${id}`,
-          fragment: gql`
-            fragment EditedUser on User {
-              verified
-              email
-            }
-          `,
-          data: {
-            email: newEmail,
-            verified: false,
-          },
-        });
-      }
+      //   const {
+      //     me: { email: prevEmail, id },
+      //   } = userData;
+      //   const { email: newEmail } = getValues();
+      //   if (prevEmail !== newEmail) {
+      //     client.writeFragment({
+      //       id: `User:${id}`,
+      //       fragment: gql`
+      //         fragment EditedUser on User {
+      //           verified
+      //           email
+      //         }
+      //       `,
+      //       data: {
+      //         email: newEmail,
+      //         verified: false,
+      //       },
+      //     });
+      //   }
+      await refetch();
     }
   };
   const [editProfile, { loading }] = useMutation<
