@@ -9,6 +9,8 @@ import { Restaurants } from '../pages/client/restaurant';
 import { Header } from '../components/header';
 import { useMe } from '../hooks/useMe';
 import { ConfirmEmail } from '../pages/user/confirm-email';
+import { EditProfile } from '../pages/user/edit-profile';
+import { NotFound } from '../pages/404';
 
 //<></> : fragment : parent없이 많은 element를 동시에 return 할 수 있게 됨
 const ClientRoutes = [
@@ -17,6 +19,9 @@ const ClientRoutes = [
   </Route>,
   <Route key={2} path="/" exact>
     <Restaurants />
+  </Route>,
+  <Route key={3} path="/edit-profile" exact>
+    <EditProfile />
   </Route>,
 ];
 
@@ -36,7 +41,10 @@ export const LoggedInRouter = () => {
       <Header />
       <Switch>
         {data.me.role === 'Client' && ClientRoutes}
-        <Redirect to="/" />
+        {/* <Redirect to="/" /> */}
+        <Route>
+          <NotFound />
+        </Route>
       </Switch>
     </Router>
   );

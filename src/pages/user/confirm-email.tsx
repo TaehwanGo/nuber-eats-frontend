@@ -1,6 +1,6 @@
 import { gql, useApolloClient, useMutation } from '@apollo/client';
 import React, { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useMe } from '../../hooks/useMe';
 import {
   verifyEmail,
@@ -19,6 +19,7 @@ const VERIFY_EMAIL_MUTATION = gql`
 export const ConfirmEmail = () => {
   const { data: userData } = useMe();
   const client = useApolloClient();
+  const history = useHistory();
   const onCompleted = (data: verifyEmail) => {
     const {
       verifyEmail: { ok },
@@ -35,6 +36,7 @@ export const ConfirmEmail = () => {
           verified: true,
         },
       });
+      history.push('/');
     }
   };
   const [verifyEmail] = useMutation<verifyEmail, verifyEmailVariables>(
@@ -50,13 +52,13 @@ export const ConfirmEmail = () => {
     // 방법 2. router로 부터 가져오기
     // console.log(location);
     const [_, code] = window.location.href.split('code=');
-    // verifyEmail({
-    //   variables: {
-    //     input: {
-    //       code,
-    //     },
-    //   },
-    // });
+    verifyEmail({
+      variables: {
+        input: {
+          code,
+        },
+      },
+    });
   }, []);
   return (
     <div className="mt-52 flex flex-col items-center justify-center">

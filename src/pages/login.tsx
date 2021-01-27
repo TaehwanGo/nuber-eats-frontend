@@ -11,7 +11,7 @@ import nuberLogo from '../images/logo.svg'; // svg는 import 가능
 import { Button } from '../components/button';
 import { Link } from 'react-router-dom';
 import { authToken, isLoggedInVar } from '../apollo';
-import { LOCALSTORAGE_TOKEN } from '../constants';
+import { EMAIL_REGEX, LOCALSTORAGE_TOKEN } from '../constants';
 
 // 아래 mutation이름 (PotatoMutation)은 백엔드로 가는게 아니라 프론트에서 쓰여질 것임(Apollo)
 // Apollo는 이 변수들을 살펴보고 내가 작성한 변수들을 가지고 mutation을 만들음
@@ -68,7 +68,7 @@ export const Login = () => {
       });
     }
   };
-  const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
   return (
     <div className="h-screen flex items-center flex-col mt-10 lg:mt-28">
       <Helmet>
@@ -87,7 +87,7 @@ export const Login = () => {
             ref={register({
               required: 'Email is required',
               pattern: {
-                value: emailRegex,
+                value: EMAIL_REGEX,
                 message: 'Please enter a valid email',
               },
             })}

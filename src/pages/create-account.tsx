@@ -11,6 +11,7 @@ import {
   createAccountMutation,
   createAccountMutationVariables,
 } from '../__generated__/createAccountMutation';
+import { EMAIL_REGEX } from '../constants';
 
 // 아래 mutation이름 (PotatoMutation)은 백엔드로 가는게 아니라 프론트에서 쓰여질 것임(Apollo)
 // Apollo는 이 변수들을 살펴보고 내가 작성한 변수들을 가지고 mutation을 만들음
@@ -77,7 +78,7 @@ export const CreateAccount = () => {
     }
   };
   console.log(watch());
-  const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
   return (
     <div className="h-screen flex items-center flex-col mt-10 lg:mt-28">
       <Helmet>
@@ -96,7 +97,7 @@ export const CreateAccount = () => {
             ref={register({
               required: 'Email is required',
               pattern: {
-                value: emailRegex,
+                value: EMAIL_REGEX,
                 message: 'Please enter a valid email',
               },
             })}
