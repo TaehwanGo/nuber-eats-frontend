@@ -8,10 +8,14 @@ import {
 import { Restaurants } from '../pages/client/restaurant';
 import { Header } from '../components/header';
 import { useMe } from '../hooks/useMe';
+import { ConfirmEmail } from '../pages/user/confirm-email';
 
 //<></> : fragment : parent없이 많은 element를 동시에 return 할 수 있게 됨
 const ClientRoutes = [
-  <Route path="/" exact>
+  <Route key={1} path="/confirm" exact>
+    <ConfirmEmail />
+  </Route>,
+  <Route key={2} path="/" exact>
     <Restaurants />
   </Route>,
 ];
