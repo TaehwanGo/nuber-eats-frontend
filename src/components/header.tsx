@@ -13,7 +13,7 @@ export const Header: React.FC = () => {
   return (
     <>
       {/* {!data?.me.verified && ( // 나중에 도메인 발급받고 메일건을 재가입 하던 다른 메일러를 써서 붙이자 
-        <div className="bg-red-500 p-3 text-center text-sm text-white">
+        <div className="bg-red-500 p-3 text-center text-base text-white">
           <span>Please verify your email</span>
         </div>
       )} */}

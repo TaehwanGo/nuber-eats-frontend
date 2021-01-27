@@ -17,7 +17,7 @@ const VERIFY_EMAIL_MUTATION = gql`
 `;
 
 export const ConfirmEmail = () => {
-  const { data: userData } = useMe();
+  const { data: userData, refetch } = useMe();
   const client = useApolloClient();
   const history = useHistory();
   const onCompleted = (data: verifyEmail) => {
@@ -26,7 +26,7 @@ export const ConfirmEmail = () => {
     } = data;
     if (ok && userData?.me.id) {
       client.writeFragment({
-        id: userData.me.id + '',
+        id: `User:${userData.me.id}`,
         fragment: gql`
           fragment VerifiedUser on User {
             verified
