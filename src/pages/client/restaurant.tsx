@@ -5,9 +5,11 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import { Restaurant } from '../../components/restaurant';
+import { RESTAURANT_FRAGMENT } from '../../fragment';
 import {
   restaurantsPageQuery,
   restaurantsPageQueryVariables,
@@ -32,17 +34,11 @@ const RESTAURANTS_QUERY = gql`
       totalPages
       totalResults
       restaurants {
-        id
-        name
-        coverImage
-        category {
-          name
-        }
-        address
-        isPromoted
+        ...RestaurantParts
       }
     }
   }
+  ${RESTAURANT_FRAGMENT}
 `;
 interface IFormProps {
   searchTerm: string;
@@ -78,6 +74,9 @@ export const Restaurants = () => {
   };
   return (
     <section>
+      <Helmet>
+        <title>Home | Nuber Eats</title>
+      </Helmet>
       <form
         onSubmit={handleSubmit(onSearchSubmit)}
         className="bg-gray-800 w-full py-20 flex items-center justify-center px-5"
