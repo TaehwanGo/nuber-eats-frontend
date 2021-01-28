@@ -7,9 +7,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import { Categories } from '../../components/categories';
 import { Restaurant } from '../../components/restaurant';
-import { RESTAURANT_FRAGMENT } from '../../fragment';
+import { CATEGORY_FRAGMENT, RESTAURANT_FRAGMENT } from '../../fragment';
 import {
   restaurantsPageQuery,
   restaurantsPageQueryVariables,
@@ -21,11 +22,7 @@ const RESTAURANTS_QUERY = gql`
       ok
       error
       categories {
-        id
-        name
-        coverImage
-        slug
-        restaurantCount
+        ...CategoryParts
       }
     }
     seeRestaurantsByPage(input: $input) {
@@ -39,6 +36,7 @@ const RESTAURANTS_QUERY = gql`
     }
   }
   ${RESTAURANT_FRAGMENT}
+  ${CATEGORY_FRAGMENT}
 `;
 interface IFormProps {
   searchTerm: string;
@@ -94,18 +92,16 @@ export const Restaurants = () => {
         <div className="px-5 xl:px-0 max-w-screen-2xl mx-auto pb-20">
           <div className="flex justify-around max-w-sm mx-auto mt-8 ">
             {data?.allCategories.categories?.map(category => (
-              <div
-                key={category.id}
-                className="group flex flex-col items-center cursor-pointer"
-              >
-                <div
-                  className="w-16 h-16 bg-cover rounded-full group-hover:bg-gray-100"
-                  style={{ backgroundImage: `url(${category.coverImage})` }}
-                ></div>
-                <span className="text-sm text-center font-semibold mt-1">
-                  {category.name}
-                </span>
-              </div>
+              <Link to={`/category/${category.slug}`}>
+                <Categories
+                  key={category.id}
+                  id={category.id + ''}
+                  coverImage={
+                    category.coverImage ? category.coverImage : undefined
+                  }
+                  name={category.name}
+                />
+              </Link>
             ))}
           </div>
           <div className="grid md:grid-cols-3 gap-x-5 gap-y-10 mt-16">
