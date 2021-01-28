@@ -1,5 +1,6 @@
 import { gql, useApolloClient, useMutation } from '@apollo/client';
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import { useForm } from 'react-hook-form';
 import { Button } from '../../components/button';
 import { EMAIL_REGEX } from '../../constants';
@@ -80,6 +81,9 @@ export const EditProfile = () => {
   };
   return (
     <div className="w-full flex flex-col px-5 items-center">
+      <Helmet>
+        <title>Edit Profile | Nuber Eats</title>
+      </Helmet>
       <div className="w-full max-w-screen-sm ">
         <h4 className="w-full font-medium text-left text-3xl mb-5">
           Edit Profile
