@@ -49,5 +49,32 @@ export const Restaurants = () => {
     },
   });
   console.log(data);
-  return <h1>Restaurants</h1>;
+  return (
+    <section>
+      <form className="bg-gray-800 w-full py-40 flex items-center justify-center px-5">
+        <input
+          type="Search"
+          className="input w-full max-w-screen-sm rounded-md border-0"
+          placeholder="Search restaurants..."
+        />
+      </form>
+      {!loading && (
+        <div className="px-5 xl:px-0 max-w-screen-2xl mx-auto mt-8">
+          <div className="flex justify-around max-w-sm mx-auto">
+            {data?.allCategories.categories?.map(category => (
+              <div className="flex flex-col items-center cursor-pointer">
+                <div
+                  className="w-14 h-14 bg-cover rounded-full hover:bg-gray-100"
+                  style={{ backgroundImage: `url(${category.coverImage})` }}
+                ></div>
+                <span className="text-sm text-center font-semibold mt-1">
+                  {category.name}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </section>
+  );
 };
