@@ -9,22 +9,6 @@ import { RestaurantsInput } from "./globalTypes";
 // GraphQL query operation: restaurantsPageQuery
 // ====================================================
 
-export interface restaurantsPageQuery_allCategories_categories {
-  __typename: "Category";
-  id: number;
-  name: string;
-  coverImage: string | null;
-  slug: string;
-  restaurantCount: number;
-}
-
-export interface restaurantsPageQuery_allCategories {
-  __typename: "AllCategoriesOutput";
-  ok: boolean;
-  error: string | null;
-  categories: restaurantsPageQuery_allCategories_categories[] | null;
-}
-
 export interface restaurantsPageQuery_seeRestaurantsByPage_restaurants_category {
   __typename: "Category";
   name: string;
@@ -50,7 +34,6 @@ export interface restaurantsPageQuery_seeRestaurantsByPage {
 }
 
 export interface restaurantsPageQuery {
-  allCategories: restaurantsPageQuery_allCategories;
   seeRestaurantsByPage: restaurantsPageQuery_seeRestaurantsByPage;
 }
 

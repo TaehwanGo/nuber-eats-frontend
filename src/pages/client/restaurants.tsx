@@ -15,9 +15,11 @@ import {
   restaurantsPageQuery,
   restaurantsPageQueryVariables,
 } from '../../__generated__/restaurantsPageQuery';
+import Loader from 'react-loader-spinner';
+import { allCategoriesQuery } from '../../__generated__/allCategoriesQuery';
 
-const RESTAURANTS_QUERY = gql`
-  query restaurantsPageQuery($input: RestaurantsInput!) {
+const CATEGORIES_QUERY = gql`
+  query allCategoriesQuery {
     allCategories {
       ok
       error
@@ -25,6 +27,12 @@ const RESTAURANTS_QUERY = gql`
         ...CategoryParts
       }
     }
+  }
+  ${CATEGORY_FRAGMENT}
+`;
+
+const RESTAURANTS_QUERY = gql`
+  query restaurantsPageQuery($input: RestaurantsInput!) {
     seeRestaurantsByPage(input: $input) {
       ok
       error
@@ -36,7 +44,6 @@ const RESTAURANTS_QUERY = gql`
     }
   }
   ${RESTAURANT_FRAGMENT}
-  ${CATEGORY_FRAGMENT}
 `;
 interface IFormProps {
   searchTerm: string;
@@ -54,6 +61,10 @@ export const Restaurants = () => {
       },
     },
   });
+  const {
+    data: allCategories,
+    loading: loadingCategories,
+  } = useQuery<allCategoriesQuery>(CATEGORIES_QUERY);
   //   console.log(data);
   const onNextPageClick = () => setPage(current => current + 1); // setState():setPage 에서 argument:current는 현재 state:page임
   const onPrevPageClick = () => setPage(current => current - 1);
@@ -70,6 +81,7 @@ export const Restaurants = () => {
       //   },
     });
   };
+
   return (
     <section>
       <Helmet>
@@ -87,12 +99,16 @@ export const Restaurants = () => {
           placeholder="Search restaurants..."
         />
       </form>
-
-      {!loading && (
-        <div className="px-5 xl:px-0 max-w-screen-2xl mx-auto pb-20">
+      {loadingCategories && (
+        <div className="py-10 flex justify-center">
+          <Loader type="TailSpin" color="gray" height={40} width={40} />
+        </div>
+      )}
+      {!loadingCategories && (
+        <div className="px-5 xl:px-0 max-w-screen-2xl mx-auto">
           <div className="flex justify-around max-w-sm mx-auto mt-8 ">
-            {data?.allCategories.categories?.map(category => (
-              <Link to={`/category/${category.slug}`}>
+            {allCategories?.allCategories.categories?.map(category => (
+              <Link key={category.id} to={`/category/${category.slug}`}>
                 <Categories
                   key={category.id}
                   id={category.id + ''}
@@ -104,7 +120,16 @@ export const Restaurants = () => {
               </Link>
             ))}
           </div>
-          <div className="grid md:grid-cols-3 gap-x-5 gap-y-10 mt-16">
+        </div>
+      )}
+      {loading && (
+        <div className="mt-12 py-32 flex justify-center">
+          <Loader type="TailSpin" color="gray" height={40} width={40} />
+        </div>
+      )}
+      {!loading && (
+        <div className="px-5 xl:px-0 max-w-screen-2xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-x-5 gap-y-10 mt-10">
             {data?.seeRestaurantsByPage.restaurants?.map(restaurant => (
               <Restaurant
                 key={restaurant.id}
@@ -115,34 +140,34 @@ export const Restaurants = () => {
               />
             ))}
           </div>
-          <div className="mt-10 grid grid-cols-3 text-center max-w-md items-center mx-auto">
-            {page > 1 ? (
-              <button
-                onClick={onPrevPageClick}
-                className="font-semibold text-2xl hover:text-green-600 focus:outline-none"
-              >
-                <FontAwesomeIcon icon={faCaretSquareLeft} />
-              </button>
-            ) : (
-              <div></div>
-            )}
-            <span>
-              Page {page} of {data?.seeRestaurantsByPage.totalPages}
-            </span>
-
-            {page !== data?.seeRestaurantsByPage.totalPages ? (
-              <button
-                onClick={onNextPageClick}
-                className="font-semibold text-2xl hover:text-green-600 focus:outline-none"
-              >
-                <FontAwesomeIcon icon={faCaretSquareRight} />
-              </button>
-            ) : (
-              <div></div>
-            )}
-          </div>
         </div>
       )}
+      <div className="py-10 grid grid-cols-3 text-center max-w-md items-center mx-auto">
+        {page > 1 ? (
+          <button
+            onClick={onPrevPageClick}
+            className="font-semibold text-2xl hover:text-green-600 focus:outline-none"
+          >
+            <FontAwesomeIcon icon={faCaretSquareLeft} />
+          </button>
+        ) : (
+          <div></div>
+        )}
+        <span>
+          Page {page} of {data?.seeRestaurantsByPage.totalPages}
+        </span>
+
+        {page !== data?.seeRestaurantsByPage.totalPages ? (
+          <button
+            onClick={onNextPageClick}
+            className="font-semibold text-2xl hover:text-green-600 focus:outline-none"
+          >
+            <FontAwesomeIcon icon={faCaretSquareRight} />
+          </button>
+        ) : (
+          <div></div>
+        )}
+      </div>
     </section>
   );
 };
