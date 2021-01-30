@@ -17,6 +17,7 @@ import {
 } from '../../__generated__/restaurantsPageQuery';
 import Loader from 'react-loader-spinner';
 import { allCategoriesQuery } from '../../__generated__/allCategoriesQuery';
+import { Pagination } from '../../components/pagination';
 
 const CATEGORIES_QUERY = gql`
   query allCategoriesQuery {
@@ -50,6 +51,12 @@ interface IFormProps {
 }
 export const Restaurants = () => {
   const [page, setPage] = useState(1); // default value : 1
+
+  const {
+    data: allCategories,
+    loading: loadingCategories,
+  } = useQuery<allCategoriesQuery>(CATEGORIES_QUERY);
+
   const { data, loading } = useQuery<
     restaurantsPageQuery,
     restaurantsPageQueryVariables
@@ -61,10 +68,6 @@ export const Restaurants = () => {
       },
     },
   });
-  const {
-    data: allCategories,
-    loading: loadingCategories,
-  } = useQuery<allCategoriesQuery>(CATEGORIES_QUERY);
   //   console.log(data);
   const onNextPageClick = () => setPage(current => current + 1); // setState():setPage 에서 argument:current는 현재 state:page임
   const onPrevPageClick = () => setPage(current => current - 1);
@@ -128,7 +131,7 @@ export const Restaurants = () => {
         </div>
       )}
       {!loading && (
-        <div className="px-5 xl:px-0 max-w-screen-2xl mx-auto">
+        <div className="px-5 xl:px-0 max-w-screen-xl mx-auto w-full">
           <div className="grid md:grid-cols-3 gap-x-5 gap-y-10 mt-10">
             {data?.seeRestaurantsByPage.restaurants?.map(restaurant => (
               <Restaurant
@@ -142,32 +145,12 @@ export const Restaurants = () => {
           </div>
         </div>
       )}
-      <div className="py-10 grid grid-cols-3 text-center max-w-md items-center mx-auto">
-        {page > 1 ? (
-          <button
-            onClick={onPrevPageClick}
-            className="font-semibold text-2xl hover:text-green-600 focus:outline-none"
-          >
-            <FontAwesomeIcon icon={faCaretSquareLeft} />
-          </button>
-        ) : (
-          <div></div>
-        )}
-        <span>
-          Page {page} of {data?.seeRestaurantsByPage.totalPages}
-        </span>
-
-        {page !== data?.seeRestaurantsByPage.totalPages ? (
-          <button
-            onClick={onNextPageClick}
-            className="font-semibold text-2xl hover:text-green-600 focus:outline-none"
-          >
-            <FontAwesomeIcon icon={faCaretSquareRight} />
-          </button>
-        ) : (
-          <div></div>
-        )}
-      </div>
+      <Pagination
+        page={page}
+        totalPages={data?.seeRestaurantsByPage.totalPages}
+        onNextPageClick={onNextPageClick}
+        onPrevPageClick={onPrevPageClick}
+      />
     </section>
   );
 };
