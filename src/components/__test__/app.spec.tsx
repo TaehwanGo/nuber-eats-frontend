@@ -26,7 +26,7 @@ describe('<App />', () => {
       // state가 바뀌는 것을 기다림
       isLoggedInVar(true);
     });
-    debug();
+    // debug();
     getByText('logged in'); // 같은 string이 있는지 찾아줌, 못찾으면 fail
   });
 });
