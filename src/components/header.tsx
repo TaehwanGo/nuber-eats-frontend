@@ -10,6 +10,7 @@ import nuberLogo from '../images/logo.svg';
 export const Header: React.FC = () => {
   const { data } = useMe(); // 이렇게 사용하면 두번 query를 graphql에 요청하는 것 같지만 사실은 apollo cache에 있으면 그것을 가져오기 때문에 한번만 요청함
   // apollo cache + custom hooks => awesome
+  // console.log(data);
   return (
     <>
       {/* {!data?.me.verified && ( // 나중에 도메인 발급받고 메일건을 재가입 하던 다른 메일러를 써서 붙이자 
