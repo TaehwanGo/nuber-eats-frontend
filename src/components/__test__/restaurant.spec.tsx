@@ -16,7 +16,7 @@ describe('<Restuarnat />', () => {
         <Restaurant {...restaurantProps} />
       </Router>,
     );
-    // debug();
+    // debug(); //
     getByText(restaurantProps.name);
     getByText(restaurantProps.categoryName);
     expect(container.firstChild).toHaveAttribute(
