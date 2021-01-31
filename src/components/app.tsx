@@ -1,8 +1,8 @@
 import { useReactiveVar } from '@apollo/client'; // gql, useQuery,
 import React from 'react';
-import { isLoggedInVar } from './apollo';
-import { LoggedInRouter } from './routers/logged-in-router';
-import { LoggedOutRouter } from './routers/logged-out-router';
+import { isLoggedInVar } from '../apollo';
+import { LoggedInRouter } from '../routers/logged-in-router';
+import { LoggedOutRouter } from '../routers/logged-out-router';
 
 // const IS_LOGGED_IN = gql`
 //   query isLoggedIn {
@@ -10,7 +10,7 @@ import { LoggedOutRouter } from './routers/logged-out-router';
 //   }
 // `;
 
-function App() {
+export const App = () => {
   // useQuery() : react-hooks 의 한 종류, for graphql
   // const {
   //   data: { isLoggedIn },
@@ -18,6 +18,4 @@ function App() {
   const isLoggedIn = useReactiveVar(isLoggedInVar); // hooks(useReactiveVar)를 사용해서 gql 쿼리를 직접 작성하지 않고 state를 확인
 
   return isLoggedIn ? <LoggedInRouter /> : <LoggedOutRouter />;
-}
-
-export default App;
+};
