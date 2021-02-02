@@ -16,11 +16,30 @@ describe('create Account', () => {
   });
 
   it('should be able to create account and login', () => {
+    user.intercept('http://localhost:4000/graphql', req => {
+      //   console.log(req.body);
+      const { operationName } = req.body;
+      if (operationName && operationName === 'createAccountMutation') {
+        req.reply(res => {
+          res.send({
+            data: {
+              createAccount: {
+                ok: true,
+                error: null,
+                __typename: 'CreateAccountOutput',
+              },
+            },
+          });
+        });
+      }
+    });
+
     user.visit('/create-account');
     user.findByPlaceholderText(/email/i).type('testCy@press.com');
     user.findByPlaceholderText(/password/i).type('1234');
     user.findByRole('button').click();
-    user.wait(2500);
+    user.wait(2000);
+    user.title().should('eq', 'Login | Nuber Eats');
     user.findByPlaceholderText(/email/i).type('testCy@press.com');
     user.findByPlaceholderText(/password/i).type('1234');
     user.findByRole('button').click();
