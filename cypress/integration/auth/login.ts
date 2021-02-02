@@ -17,14 +17,7 @@ describe('Log in', () => {
   });
 
   it('can fill out the form and log in', () => {
-    cy.visit('/')
-      .get('[name="email"]')
-      .type('asdf1234@asdf.com')
-      .get('[name="password"]')
-      .type('1234');
-    cy.findByRole('button')
-      .should('not.have.class', 'pointer-events-none')
-      .click();
-    cy.window().its('localStorage.nuber-token').should('be.a', 'string');
+    // @ts-ignore
+    cy.login('testCy@press.com', '1234');
   });
 });
