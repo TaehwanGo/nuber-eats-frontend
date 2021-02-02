@@ -32,7 +32,7 @@ export const Header: React.FC = () => {
             Logout
           </span>
           <span className="text-xs">
-            <Link to="/edit-profile/">
+            <Link to="/edit-profile">
               <FontAwesomeIcon icon={faUser} className="text-xl" />
             </Link>
           </span>
