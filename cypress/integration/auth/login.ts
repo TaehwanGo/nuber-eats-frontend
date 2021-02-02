@@ -16,7 +16,7 @@ describe('Log in', () => {
     cy.findByRole('alert').should('have.text', 'Password is required');
   });
 
-  it('can fill out the form', () => {
+  it('can fill out the form and log in', () => {
     cy.visit('/')
       .get('[name="email"]')
       .type('asdf1234@asdf.com')
@@ -26,9 +26,5 @@ describe('Log in', () => {
       .should('not.have.class', 'pointer-events-none')
       .click();
     cy.window().its('localStorage.nuber-token').should('be.a', 'string');
-  });
-
-  it('sign up', () => {
-    cy.visit('/create-account');
   });
 });
