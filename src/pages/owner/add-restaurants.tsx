@@ -43,6 +43,7 @@ export const AddRestaurant = () => {
       const { file, name, categoryName, address } = getValues();
       setUploading(false);
       // fake
+
       const queryResult = client.readQuery({
         query: MY_RESTAURANTS_QUERY,
       });
@@ -50,7 +51,7 @@ export const AddRestaurant = () => {
         query: MY_RESTAURANTS_QUERY,
         data: {
           myRestaurants: {
-            ...queryResult?.myRestaurants,
+            ...queryResult.myRestaurants, // 이 조건때문에 반드시 my-restaurant page에서 캐시를 얻어와야 함
             restaurants: [
               {
                 address,
@@ -64,11 +65,12 @@ export const AddRestaurant = () => {
                 name,
                 __typename: 'Restaurant',
               },
-              ...queryResult?.myRestaurants.restaurants,
+              ...queryResult.myRestaurants.restaurants,
             ],
           },
         },
       });
+
       history.push('/');
     }
   };
@@ -77,7 +79,7 @@ export const AddRestaurant = () => {
     createRestaurantMutationVariables
   >(CREATE_RESTAURANT_MUTATION, {
     onCompleted,
-    refetchQueries: [{ query: MY_RESTAURANTS_QUERY }], // mutation 작업이 성공적으로 끝나면 자동으로 refetch(apollo cache update)
+    // refetchQueries: [{ query: MY_RESTAURANTS_QUERY }], // mutation 작업이 성공적으로 끝나면 자동으로 refetch(apollo cache update)
   });
 
   const {

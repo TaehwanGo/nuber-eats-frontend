@@ -30,6 +30,9 @@ export const MyRestaurants = () => {
       </Helmet>
       <div className="px-5 xl:px-0 max-w-screen-xl mx-auto mt-32">
         <h2 className="text-4xl font-medium mb-10">My Restaurants</h2>
+        <Link className="text-lime-600 hover:underline" to="/add-restaurant">
+          Create one &rarr;
+        </Link>
         {data?.myRestaurants.ok &&
         data.myRestaurants.restaurants.length === 0 ? (
           <>
