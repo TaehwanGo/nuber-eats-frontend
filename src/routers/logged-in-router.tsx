@@ -9,27 +9,48 @@ import { NotFound } from '../pages/404';
 import { Search } from '../pages/client/search';
 import { Category } from '../pages/client/category';
 import { RestaurantDetail } from '../pages/client/restaurant';
+import { MyRestaurants } from '../pages/owner/my-restaurants';
+import { AddRestaurant } from '../pages/owner/add-restaurants';
 
-//<></> : fragment : parent없이 많은 element를 동시에 return 할 수 있게 됨
-const ClientRoutes = [
-  <Route key={1} path="/confirm">
-    <ConfirmEmail />
-  </Route>,
-  <Route key={2} path="/" exact>
-    <Restaurants />
-  </Route>,
-  <Route key={3} path="/edit-profile">
-    <EditProfile />
-  </Route>,
-  <Route key={4} path="/search">
-    <Search />
-  </Route>,
-  <Route key={5} path="/category/:slug">
-    <Category />
-  </Route>,
-  <Route key={5} path="/restaurant/:id">
-    <RestaurantDetail />
-  </Route>,
+const clientRoutes = [
+  {
+    path: '/',
+    component: <Restaurants />,
+  },
+  {
+    path: '/search',
+    component: <Search />,
+  },
+  {
+    path: '/category/:slug',
+    component: <Category />,
+  },
+  {
+    path: '/edit-profile',
+    component: <RestaurantDetail />,
+  },
+];
+
+const commonRoutes = [
+  {
+    path: '/confirm',
+    component: <ConfirmEmail />,
+  },
+  {
+    path: '/edit-profile',
+    component: <EditProfile />,
+  },
+];
+
+const restaurantRoutes = [
+  {
+    path: '/',
+    component: <MyRestaurants />,
+  },
+  {
+    path: '/add-restaurant',
+    component: <AddRestaurant />,
+  },
 ];
 
 export const LoggedInRouter = () => {
@@ -47,7 +68,23 @@ export const LoggedInRouter = () => {
     <Router>
       <Header />
       <Switch>
-        {data.me.role === 'Client' && ClientRoutes}
+        {data.me.role === 'Client' &&
+          clientRoutes.map(route => (
+            <Route exact key={route.path} path={route.path}>
+              {route.component}
+            </Route>
+          ))}
+        {data.me.role === 'Owner' &&
+          restaurantRoutes.map(route => (
+            <Route exact key={route.path} path={route.path}>
+              {route.component}
+            </Route>
+          ))}
+        {commonRoutes.map(route => (
+          <Route exact key={route.path} path={route.path}>
+            {route.component}
+          </Route>
+        ))}
         <Route>
           <NotFound />
         </Route>

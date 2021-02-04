@@ -8,4 +8,12 @@
   @apply p-3 border-2 border-gray-200 text-lg font-light focus:outline-none focus:border-gray-500 transition-colors;
 }
 
+.container {
+  @apply px-5 xl:px-0 max-w-screen-xl mx-auto;
+}
+
+.link {
+  @apply text-lime-600 hover:underline;
+}
+
 @tailwind utilities;
