@@ -14,7 +14,7 @@ export const Restaurant: React.FC<IRestaurantProps> = ({
   name,
   categoryName,
 }) => (
-  <Link key={id} to={`/restaurant/${id}`}>
+  <Link key={id} to={`/restaurants/${id}`}>
     <div className="flex flex-col">
       {/* restaurant는 img(background img를 넣는게 더 쉽기 때문에 div태그 사용), title, category를 표시함 */}
       <div
