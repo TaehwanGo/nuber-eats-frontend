@@ -1,7 +1,8 @@
 import { gql, useQuery } from '@apollo/client';
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import { RESTAURANT_FRAGMENT } from '../../fragment';
+import { Helmet } from 'react-helmet-async';
+import { Link, useParams } from 'react-router-dom';
+import { RESTAURANT_FRAGMENT, DISH_FRAGMENT } from '../../fragment';
 import {
   myRestaurant,
   myRestaurantVariables,
@@ -14,11 +15,15 @@ const MY_RESTAURANT_QUERY = gql`
       error
       restaurant {
         ...RestaurantParts
+        menu {
+          ...DishParts
+        }
       }
     }
   }
   ${RESTAURANT_FRAGMENT}
-`; // 나중에 fragment로 얻는 것 외에 그 다음줄에 필요한 것들을 추가할 수 있음
+  ${DISH_FRAGMENT}
+`; // 나중에 fragment로 얻는 것 외에 그 다음줄에 필요한 것들을 추가할 수 있음 - 이번엔 fragment를 추가함
 
 interface IParams {
   id: string;
@@ -37,5 +42,33 @@ export const MyRestaurant = () => {
     },
   );
   console.log(data);
-  return <h1>My Restaurant</h1>;
+  return (
+    <div>
+      <Helmet>
+        <title>My Restaurant | Nuber Eats</title>
+      </Helmet>
+      <div
+        className="bg-gray-400 py-28 bg-center bg-cover"
+        style={{
+          backgroundImage: `url(${data?.myRestaurant.restaurant?.coverImage})`,
+        }}
+      ></div>
+      <div className="container mt-10">
+        <h2 className="text-4xl font-medium mb-10">
+          {data?.myRestaurant.restaurant?.name || 'Loading...'}
+        </h2>
+        <Link to={``} className="mr-8 text-white bg-gray-800 py-3 px-10">
+          Add Dish &rarr;
+        </Link>
+        <Link to={``} className=" text-white bg-lime-700 py-3 px-10">
+          Buy Promotion &rarr;
+        </Link>
+        <div className="mt-10">
+          {data?.myRestaurant.restaurant?.menu.length === 0 ? (
+            <h4 className="text-xl mb-5">Please upload a dish.</h4>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
 };
