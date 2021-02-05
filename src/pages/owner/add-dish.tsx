@@ -28,6 +28,7 @@ interface IForm {
   name: string;
   price: string; // form에는 문자열 밖에 없음
   description: string;
+  [key: string]: string;
 }
 
 export const AddDish = () => {
@@ -75,15 +76,13 @@ export const AddDish = () => {
     // });
     // history.goBack();
   };
-  const [optionsNumber, setOptionsNumber] = useState(0);
+  const [optionsNumber, setOptionsNumber] = useState<number[]>([]);
   const onAddOptionClick = () => {
-    setOptionsNumber(current => current + 1);
+    setOptionsNumber(current => [Date.now(), ...current]);
   };
   const onDeleteClick = (idToDelete: number) => {
-    setOptionsNumber(current => current - 1);
-    // @ts-ignore
-    setValue(`${idToDelete}-optionName`, ''); // typeScript는 "name", "price", "description"만 인정함
-    // @ts-ignore
+    setOptionsNumber(current => current.filter(id => id !== idToDelete)); //
+    setValue(`${idToDelete}-optionName`, ''); // ''을 값으로 설정해서 ...rest에서 제외 함
     setValue(`${idToDelete}-optionExtra`, '');
   };
   return (
@@ -136,28 +135,25 @@ export const AddDish = () => {
           >
             Add Dish Option
           </span>
-          {optionsNumber !== 0 &&
-            Array.from(new Array(optionsNumber)).map((
-              _,
-              index, // optionsNumber 만큼 map 실행
-            ) => (
-              <div key={index} className="mt-5">
+          {optionsNumber.length !== 0 &&
+            optionsNumber.map(id => (
+              <div key={id} className="mt-5">
                 <input
                   ref={register}
-                  name={`${index}-optionName`}
+                  name={`${id}-optionName`}
                   className="py-2 px-4 focus:outline-none mr-3 focus:border-gray-600 border-2"
                   type="text"
                   placeholder="Option Name"
                 />
                 <input
                   ref={register}
-                  name={`${index}-optionExtra`}
+                  name={`${id}-optionExtra`}
                   className="py-2 px-4 focus:outline-none focus:border-gray-600 border-2"
                   type="number"
                   min={0}
                   placeholder="Option Extra"
                 />
-                <span onClick={() => onDeleteClick(index)}>Delete Option</span>
+                <span onClick={() => onDeleteClick(id)}>Delete Option</span>
               </div>
             ))}
         </div>
@@ -170,4 +166,4 @@ export const AddDish = () => {
       </form>
     </div>
   );
-};
+}; // onDeleteClick 함수도 option이 만들어 질때 옵션마다 하나씩 새로 만들어지는 것 같다.
