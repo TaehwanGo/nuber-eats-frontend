@@ -8,7 +8,7 @@ import {
   myRestaurantVariables,
 } from '../../__generated__/myRestaurant';
 
-const MY_RESTAURANT_QUERY = gql`
+export const MY_RESTAURANT_QUERY = gql`
   query myRestaurant($input: MyRestaurantInput!) {
     myRestaurant(input: $input) {
       ok
@@ -57,7 +57,10 @@ export const MyRestaurant = () => {
         <h2 className="text-4xl font-medium mb-10">
           {data?.myRestaurant.restaurant?.name || 'Loading...'}
         </h2>
-        <Link to={``} className="mr-8 text-white bg-gray-800 py-3 px-10">
+        <Link
+          to={`/restaurants/${id}/add-dish`}
+          className="mr-8 text-white bg-gray-800 py-3 px-10"
+        >
           Add Dish &rarr;
         </Link>
         <Link to={``} className=" text-white bg-lime-700 py-3 px-10">
