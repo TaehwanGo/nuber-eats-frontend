@@ -3,12 +3,25 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useParams } from 'react-router-dom';
 import { Dish } from '../../components/dish';
-import { RESTAURANT_FRAGMENT, DISH_FRAGMENT } from '../../fragment';
+import {
+  RESTAURANT_FRAGMENT,
+  DISH_FRAGMENT,
+  ORDERS_FRAGMENT,
+} from '../../fragment';
 import {
   myRestaurant,
   myRestaurantVariables,
 } from '../../__generated__/myRestaurant';
-import { VictoryBar, VictoryChart, VictoryAxis, VictoryPie } from 'victory';
+import {
+  VictoryBar,
+  VictoryChart,
+  VictoryAxis,
+  VictoryPie,
+  VictoryVoronoiContainer,
+  VictoryLine,
+  VictoryTheme,
+  VictoryLabel,
+} from 'victory';
 
 export const MY_RESTAURANT_QUERY = gql`
   query myRestaurant($input: MyRestaurantInput!) {
@@ -20,11 +33,15 @@ export const MY_RESTAURANT_QUERY = gql`
         menu {
           ...DishParts
         }
+        orders {
+          ...OrderParts
+        }
       }
     }
   }
   ${RESTAURANT_FRAGMENT}
   ${DISH_FRAGMENT}
+  ${ORDERS_FRAGMENT}
 `; // 나중에 fragment로 얻는 것 외에 그 다음줄에 필요한 것들을 추가할 수 있음 - 이번엔 fragment를 추가함
 
 interface IParams {
@@ -95,6 +112,40 @@ export const MyRestaurant = () => {
         </div>
         <div className="mt-20 mb-10">
           <h4 className="text-center text-2xl font-semibold">Sales</h4>
+          <div>
+            <VictoryChart
+              theme={VictoryTheme.material}
+              width={window.innerWidth}
+              containerComponent={<VictoryVoronoiContainer />}
+              domainPadding={20}
+            >
+              <VictoryLine
+                data={data?.myRestaurant.restaurant?.orders.map(order => ({
+                  x: order.createdAt,
+                  y: order.total,
+                }))}
+                interpolation="natural"
+                style={{
+                  data: { strokeWidth: 3 },
+                }}
+                labels={({ datum }) => `$${datum.y}`}
+                labelComponent={<VictoryLabel renderInPortal dy={-20} />}
+              />
+              <VictoryAxis
+                tickLabelComponent={<VictoryLabel renderInPortal />}
+                style={{ tickLabels: { fontSize: 15, fill: 'green' } as any }}
+                dependentAxis
+                tickFormat={tick => `$${tick}`}
+              />
+              <VictoryAxis
+                style={{ tickLabels: { fontSize: 15, angle: 45 } }}
+                tickFormat={tick => new Date(tick).toLocaleDateString()}
+              />
+            </VictoryChart>
+          </div>
+        </div>
+        <div className="mt-20 mb-10">
+          <h4 className="text-center text-2xl font-semibold">Charts Exam</h4>
           <div className="max-w-screen-sm w-full mx-auto">
             <VictoryChart domainPadding={20}>
               <VictoryAxis

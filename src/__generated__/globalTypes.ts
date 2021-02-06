@@ -28,9 +28,9 @@ export interface CreateDishInput {
   name: string;
   photo?: string | null;
   price: number;
-  description: string;
   options?: DishOptionInputType[] | null;
   restaurantId: number;
+  description: string;
 }
 
 export interface CreateRestaurantInput {
