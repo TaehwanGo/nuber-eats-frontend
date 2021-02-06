@@ -8,6 +8,7 @@ import {
   myRestaurant,
   myRestaurantVariables,
 } from '../../__generated__/myRestaurant';
+import { VictoryBar, VictoryChart, VictoryAxis } from 'victory';
 
 export const MY_RESTAURANT_QUERY = gql`
   query myRestaurant($input: MyRestaurantInput!) {
@@ -74,6 +75,7 @@ export const MyRestaurant = () => {
             <div className="grid md:grid-cols-3 gap-x-5 gap-y-10 mt-10">
               {data?.myRestaurant.restaurant?.menu.map(dish => (
                 <Dish
+                  key={dish.id}
                   name={dish.name}
                   description={dish.description}
                   price={dish.price}
@@ -81,6 +83,23 @@ export const MyRestaurant = () => {
               ))}
             </div>
           )}
+        </div>
+        <div className="mt-20 mb-10">
+          <h4 className="text-center text-2xl font-semibold">Sales</h4>
+          <div className="max-w-screen-sm w-full mx-auto">
+            <VictoryChart domainPadding={20}>
+              <VictoryAxis label="Amount of Money" dependentAxis />
+              <VictoryAxis label="Days of Life" tickValues={[10, 20, 30, 40]} />
+              <VictoryBar
+                data={[
+                  { x: 10, y: 20 },
+                  { x: 20, y: 5 },
+                  { x: 30, y: 15 },
+                  { x: 40, y: 28 },
+                ]}
+              />
+            </VictoryChart>
+          </div>
         </div>
       </div>
     </div>
