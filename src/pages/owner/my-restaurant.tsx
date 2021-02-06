@@ -8,7 +8,7 @@ import {
   myRestaurant,
   myRestaurantVariables,
 } from '../../__generated__/myRestaurant';
-import { VictoryBar, VictoryChart, VictoryAxis } from 'victory';
+import { VictoryBar, VictoryChart, VictoryAxis, VictoryPie } from 'victory';
 
 export const MY_RESTAURANT_QUERY = gql`
   query myRestaurant($input: MyRestaurantInput!) {
@@ -44,6 +44,15 @@ export const MyRestaurant = () => {
     },
   );
   console.log(data);
+  const chartData = [
+    { x: 1, y: 3000 },
+    { x: 2, y: 1500 },
+    { x: 3, y: 2500 },
+    { x: 4, y: 4000 },
+    { x: 5, y: 7000 },
+    { x: 6, y: 2500 },
+    { x: 7, y: 5000 },
+  ];
   return (
     <div>
       <Helmet>
@@ -88,17 +97,19 @@ export const MyRestaurant = () => {
           <h4 className="text-center text-2xl font-semibold">Sales</h4>
           <div className="max-w-screen-sm w-full mx-auto">
             <VictoryChart domainPadding={20}>
-              <VictoryAxis label="Amount of Money" dependentAxis />
-              <VictoryAxis label="Days of Life" tickValues={[10, 20, 30, 40]} />
-              <VictoryBar
-                data={[
-                  { x: 10, y: 20 },
-                  { x: 20, y: 5 },
-                  { x: 30, y: 15 },
-                  { x: 40, y: 28 },
-                ]}
+              <VictoryAxis
+                dependentAxis
+                tickFormat={step => `$${step / 1000}k`}
               />
+              <VictoryAxis tickFormat={step => `Day ${step}`} />
+              <VictoryBar data={chartData} />
             </VictoryChart>
+          </div>
+          <div className="max-w-screen-sm w-full mx-auto">
+            <VictoryPie
+              data={chartData}
+              colorScale={['tomato', 'orange', 'gold', 'cyan', 'navy']}
+            />
           </div>
         </div>
       </div>
