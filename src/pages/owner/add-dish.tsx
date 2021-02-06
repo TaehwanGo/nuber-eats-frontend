@@ -28,7 +28,7 @@ interface IForm {
   name: string;
   price: string; // form에는 문자열 밖에 없음
   description: string;
-  [key: string]: string;
+  [key: string]: string; // escape way of typescript
 }
 
 export const AddDish = () => {
@@ -64,17 +64,23 @@ export const AddDish = () => {
     // console.log(getValues());
     const { name, price, description, ...rest } = getValues();
     console.log(rest);
-    // createDishMutation({
-    //   variables: {
-    //     input: {
-    //       name,
-    //       price: +price,
-    //       description,
-    //       restaurantId: +restaurantId,
-    //     },
-    //   },
-    // });
-    // history.goBack();
+    const optionObjects = optionsNumber.map(theId => ({
+      name: rest[`${theId}-optionName`],
+      extra: +rest[`${theId}-optionExtra`],
+    }));
+    console.log(optionObjects);
+    createDishMutation({
+      variables: {
+        input: {
+          name,
+          price: +price,
+          description,
+          restaurantId: +restaurantId,
+          options: optionObjects,
+        },
+      },
+    });
+    history.goBack();
   };
   const [optionsNumber, setOptionsNumber] = useState<number[]>([]);
   const onAddOptionClick = () => {
@@ -82,8 +88,10 @@ export const AddDish = () => {
   };
   const onDeleteClick = (idToDelete: number) => {
     setOptionsNumber(current => current.filter(id => id !== idToDelete)); //
-    setValue(`${idToDelete}-optionName`, ''); // ''을 값으로 설정해서 ...rest에서 제외 함
+    setValue(`${idToDelete}-optionName`, ''); // ''을 값으로 설정하려고 하면 name이 `${idToDelete}-optionName`인것을 찾아야 되는데 못찾아서 제외시키는 것 같다.
     setValue(`${idToDelete}-optionExtra`, '');
+    console.log(optionsNumber);
+    // `${idToDelete}-optionName-${choiceId}-choiceName` // choice exam later
   };
   return (
     <div className="container">
@@ -136,7 +144,9 @@ export const AddDish = () => {
             Add Dish Option
           </span>
           {optionsNumber.length !== 0 &&
-            optionsNumber.map(id => (
+            optionsNumber.map((
+              id, // dynamic way to generate form
+            ) => (
               <div key={id} className="mt-5">
                 <input
                   ref={register}
@@ -153,7 +163,12 @@ export const AddDish = () => {
                   min={0}
                   placeholder="Option Extra"
                 />
-                <span onClick={() => onDeleteClick(id)}>Delete Option</span>
+                <span
+                  onClick={() => onDeleteClick(id)}
+                  className="cursor-pointer text-white bg-red-500 py-3 px-4 mt-5 ml-3"
+                >
+                  Delete Option
+                </span>
               </div>
             ))}
         </div>
