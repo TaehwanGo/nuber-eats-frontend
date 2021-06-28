@@ -27,23 +27,18 @@ export const CREATE_ACCOUNT_MUTATION = gql`
 interface ICreateAccountForm {
   email: string;
   password: string;
+  passwordConfirm: string;
   role: UserRole;
 }
 
 export const CreateAccount = () => {
-  const {
-    register,
-    getValues,
-    watch,
-    errors,
-    handleSubmit,
-    formState,
-  } = useForm<ICreateAccountForm>({
-    mode: 'onChange',
-    defaultValues: {
-      role: UserRole.Client,
-    },
-  }); // useForm + useMutation => awesome !
+  const { register, getValues, watch, errors, handleSubmit, formState } =
+    useForm<ICreateAccountForm>({
+      mode: 'onChange',
+      defaultValues: {
+        role: UserRole.Client,
+      },
+    }); // useForm + useMutation => awesome !
   const history = useHistory();
   const onCompleted = (data: createAccountMutation) => {
     const {
@@ -120,6 +115,20 @@ export const CreateAccount = () => {
           {errors.password?.message && (
             <FormError errorMessage={errors.password?.message} />
           )}
+          <input
+            ref={register({
+              required: 'Password confirm is required',
+              validate: value => value === getValues().password,
+            })}
+            name="passwordConfirm"
+            type="password"
+            placeholder="Confirm password"
+            className="input"
+          />
+          {watch().passwordConfirm !== watch().password && (
+            <FormError errorMessage={'Password do not match'} />
+          )}
+          {/* {console.log(watch().password, watch().passwordConfirm)} */}
           <select
             name="role"
             ref={register({ required: true })}
