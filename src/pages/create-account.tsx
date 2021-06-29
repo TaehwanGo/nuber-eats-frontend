@@ -129,6 +129,7 @@ export const CreateAccount = () => {
             <FormError errorMessage={'Password do not match'} />
           )}
           {/* {console.log(watch().password, watch().passwordConfirm)} */}
+          {/* {console.log(formState)} */}
           <select
             name="role"
             ref={register({ required: true })}

@@ -37,13 +37,9 @@
 
 - UI 개선
   - [ ] restaurant detail page
-  - [ ] Create account
-    - [ ] password double check
+  - [x] Create account
+    - [x] password double check
       - 비밀번호 확인칸에서 같을 경우에만 버튼 활성화
-        - useForm의 formState.isValid :
-    - [ ] email 중복 체크 : useForm() register의 validate 기능 사용
-      - DB(postgreSQL, pgAdmin4)에 이미 가입된 email이 있는지 확인
-      - 현재 서버에서 오는 에러 메세지를 띄워서 가입여부 확인 가능
 - 기능
   - [ ] 주문 기능 동작하게 수정 필요
   - [ ] 구매후기 작성 기능 추가 예정
@@ -308,5 +304,29 @@ const { register, error } = useForm<ILoginForm>(); // <ILoginForm>을 typescript
 // 이후 typescript가 자동완성 기능을 실행
 // error.email?.message // error. 이후 자동완성 사용 가능
 ```
+
+</details>
+
+### 15.3 Router and @types
+
+<details>
+<summary>npm install @type/react-router-dom</summary>
+
+react-router-dom은 javascript 버전인데
+typescript는 알아 듣질 못 함
+
+1. @type 버전이 있길 기도
+   구글 : definitely typed => The repository for high queality Typescript type definitions.
+
+npm install @type/react-router-dom
+
+2. @type 버전이 없을 경우엔 type definition을 하고 사용가능하지만 typescript의 보호기능 등은 사용 불가능
+
+</details>
+
+### 15.4 Form Design
+
+<details>
+<summary></summary>
 
 </details>
